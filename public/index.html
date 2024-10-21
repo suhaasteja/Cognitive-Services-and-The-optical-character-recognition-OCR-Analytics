@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Analytics Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>OCR Analytics Page</h1>
+        <div class="steps">
+            <div class="step">
+                <h2>Step 1</h2>
+                <input type="file" id="imageInput" accept="image/*">
+                <button id="selectImage">Select Image</button>
+            </div>
+            <div class="step">
+                <h2>Step 2</h2>
+                <button id="analyzeImage">OCR Analyze</button>
+            </div>
+            <div class="step">
+                <h2>Step 3</h2>
+                <div id="ocrOutput">
+                    <h3>OCR Categories Output</h3>
+                    <pre id="ocrResult"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
