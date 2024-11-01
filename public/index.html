@@ -4,30 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCR Analytics Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background-color: #ffffff;
+            border: 2px solid #1f4ba5;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #1f4ba5;
+            color: #ffffff;
+            padding: 10px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            border: 1px solid #1f4ba5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .step-title {
+            background-color: #1f4ba5;
+            color: #ffffff;
+            padding: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .step img {
+            width: 100%;
+            max-width: 200px;
+            height: 150px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #1f4ba5;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .output {
+            height: 150px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>OCR Analytics Page</h1>
+        <div class="header">OCR Analytics Page</div>
         <div class="steps">
             <div class="step">
-                <h2>Step 1</h2>
-                <input type="file" id="imageInput" accept="image/*">
-                <button id="selectImage">Select Image</button>
+                <div class="step-title">Step 1</div>
+                <img id="uploadedImage" src="" alt="Image Preview">
+                <input type="file" id="imageInput" style="display: none;" onchange="previewImage(event)">
+                <button class="button" onclick="document.getElementById('imageInput').click();">Select Image</button>
             </div>
             <div class="step">
-                <h2>Step 2</h2>
-                <button id="analyzeImage">OCR Analyze</button>
+                <div class="step-title">Step 2</div>
+                <button class="button" onclick="performOCR()">OCR Analyze</button>
             </div>
             <div class="step">
-                <h2>Step 3</h2>
-                <div id="ocrOutput">
-                    <h3>OCR Categories Output</h3>
-                    <pre id="ocrResult"></pre>
-                </div>
+                <div class="step-title">Step 3</div>
+                <div class="output" id="ocrOutput">OCR Categories Output</div>
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        let selectedFile;
+
+        function previewImage(event) {
+            selectedFile = event.target.files[0];
+            const image = document.getElementById('uploadedImage');
+            image.src = URL.createObjectURL(selectedFile);
+        }
+
+        function performOCR() {
+            const output = document.getElementById('ocrOutput');
+            output.textContent = "Performing OCR..."; // Update the output area
+
+            if (selectedFile) {
+                Tesseract.recognize(
+                    selectedFile,
+                    'eng',
+                    {
+                        logger: info => console.log(info) // Optional: Logs OCR progress in the console
+                    }
+                ).then(({ data: { text } }) => {
+                    output.textContent = text;
+                }).catch(error => {
+                    output.textContent = "An error occurred during OCR.";
+                    console.error(error);
+                });
+            } else {
+                output.textContent = "Please select an image first.";
+            }
+        }
+    </script>
 </body>
 </html>
